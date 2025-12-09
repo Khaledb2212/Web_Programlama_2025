@@ -1,0 +1,14 @@
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\bin\Debug\net8.0\DaataBaseLayer.deps.json
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\bin\Debug\net8.0\DaataBaseLayer.runtimeconfig.json
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\bin\Debug\net8.0\DaataBaseLayer.dll
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\bin\Debug\net8.0\DaataBaseLayer.pdb
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.csproj.AssemblyReference.cache
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.AssemblyInfoInputs.cache
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.AssemblyInfo.cs
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.csproj.CoreCompileInputs.cache
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.dll
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\refint\DaataBaseLayer.dll
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.pdb
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\DaataBaseLayer.genruntimeconfig.cache
+C:\Users\kloda\OneDrive\Desktop\Web_Project2\DaataBaseLayer\obj\Debug\net8.0\ref\DaataBaseLayer.dll

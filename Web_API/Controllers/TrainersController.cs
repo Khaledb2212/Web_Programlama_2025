@@ -1,0 +1,241 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Web_API.Models;
+
+namespace Web_API.Controllers
+{
+    //[Route("api/[controller]")]
+    [Route("api/Trainers")]
+    [ApiController]
+    public class TrainersController : ControllerBase
+    {
+        private readonly ProjectDbContext _context;
+
+        public TrainersController(ProjectDbContext context)
+        {
+            _context = context;
+        }
+
+        //https://localhost:7085/api/Trainers/GetTrainers
+        [HttpGet("GetTrainers", Name = "GetTrainers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<Trainer>>> GetTrainers()
+        {
+            try
+            {
+                // Including the 'Person' data so you see the trainer's name, not just ID
+                var trainers = await _context.Trainers.Include(x => x.person).ToListAsync();
+
+                if (trainers == null || trainers.Count == 0)
+                {
+                    return NotFound("No trainers found.");
+                }
+
+                return Ok(trainers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data: " + ex.Message);
+            }
+        }
+
+        //https://localhost:7085/api/Trainers/GetTrainer?id=
+        [HttpGet("GetTrainer", Name = "GetTrainer")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Trainer>> GetTrainer(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid ID");
+                }
+
+                var trainer = await _context.Trainers
+                                            .Include(t => t.person) // Include personal details
+                                            .FirstOrDefaultAsync(t => t.TrainerID == id);
+
+                if (trainer == null)
+                {
+                    return NotFound($"Trainer with ID {id} not found.");
+                }
+
+                return Ok(trainer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving trainer: " + ex.Message);
+            }
+        }
+
+        //https://localhost:7085/api/Trainers/AddTrainer
+        [HttpPost("AddTrainer",Name = "AddTrainer")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<Trainer>> PostTrainer(Trainer trainer)
+        {
+            // 1. Basic Validation
+            if (trainer == null)
+            {
+                return BadRequest("Trainer data is null.");
+            }
+
+            // 2. Business Logic Validation: Ensure the Person exists first!
+            // You cannot make a ghost a trainer.
+            try
+            {
+                if (trainer.person is not null)// i do not mean that it is null in the database, but it isn`t null in the json file
+                {
+                    await _context.Trainers.AddAsync(trainer);
+                }
+                else
+                {
+                    bool ExistingPerson = await _context.Person.AnyAsync(x => x.PersonID == trainer.PersonID);
+                    if (!ExistingPerson)
+                    {
+                        return BadRequest($"PersonID {trainer.PersonID} does not exist. And It has not been created with trainer in the first step, in the if block.");
+
+                    }
+                    bool alreadyTrainer = await _context.Trainers.AnyAsync(m => m.PersonID == trainer.PersonID);
+                    if (alreadyTrainer)
+                    {
+                        return Conflict($"PersonID {trainer.PersonID} is already registered as a trainer.");
+                    }                    
+                }
+                await _context.Trainers.AddAsync(trainer);
+                return CreatedAtAction("GetTrainer", new { id = trainer.TrainerID }, trainer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating trainer: " + ex.Message);
+            }
+
+        }
+
+        //https://localhost:7085/api/Trainers/UpdateTrainer?id=
+        [HttpPut("UpdateTrainer", Name = "UpdateTrainer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> PutTrainer(int id, Trainer trainer)
+        {
+            // 1. ID Validation
+            if (id <= 0)
+            {
+                return BadRequest("This Is An Invalid ID");
+            }
+
+            if (id != trainer.TrainerID || trainer == null)
+            {
+                return BadRequest("ID mismatch or invalid data for trainer.");
+            }
+
+            // 2. Load Existing Trainer AND the related Person
+            // We search by TrainerID because 'id' comes from the URL (api/Trainers/5)
+            var existingTrainer = await _context.Trainers
+                                                .Include(t => t.person)
+                                                .FirstOrDefaultAsync(t => t.TrainerID == id);
+
+            if (existingTrainer == null)
+            {
+                return NotFound($"Trainer with ID {id} not found.");
+            }
+
+            // 3. Update Person Properties (The Common Data)
+            if (existingTrainer.person != null && trainer.person != null)
+            {
+                existingTrainer.person.Firstname = trainer.person.Firstname;
+                existingTrainer.person.Lastname = trainer.person.Lastname;
+                existingTrainer.person.Email = trainer.person.Email;
+                existingTrainer.person.Phone = trainer.person.Phone;
+                existingTrainer.person.Username = trainer.person.Username;
+                existingTrainer.person.Password = trainer.person.Password;
+                // Role is usually not updated here to prevent security issues
+            }
+
+            // 4. Update Trainer Specific Properties (The New Part)
+            existingTrainer.ExpertiseAreas = trainer.ExpertiseAreas;
+            existingTrainer.Description = trainer.Description;
+
+            /*
+             The Correct JSON Request for Trainer:
+             {
+               "trainerID": 3,
+               "personID": 10,   // Must match the real PersonID in DB
+               "expertiseAreas": "Advanced Yoga, Pilates",
+               "description": "Updated description for the trainer.",
+               "person": {
+                 "personID": 10, // Must match the real PersonID in DB
+                 "firstname": "Ali",
+                 "lastname": "Demir",
+                 "email": "ali.updated@gym.com",
+                 "phone": "5559998877",
+                 "username": "ali_tr",
+                 "password": "newpassword123",
+                 "role": 1
+               }
+             }
+             */
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating trainer: " + ex.Message);
+            }
+
+            return NoContent();
+        }
+        
+        
+        // DELETE: api/Trainers/5
+        [HttpDelete("DeleteTrainer", Name = "DeleteTrainer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteTrainer(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid ID");
+            }
+
+            try
+            {
+                var trainer = await _context.Trainers.FindAsync(id);
+                if (trainer == null)
+                {
+                    return NotFound($"Trainer with ID {id} not found.");
+                }
+
+                _context.Trainers.Remove(trainer);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting trainer: " + ex.Message);
+            }
+        }
+
+        private bool TrainerExists(int id)
+        {
+            return _context.Trainers.Any(e => e.TrainerID == id);
+        }
+    }
+}
