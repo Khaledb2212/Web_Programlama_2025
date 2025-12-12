@@ -40,15 +40,13 @@ namespace Web_API.Models
         public string? Password { get; set; }
 
         
-        public byte Role { get; set; }
-        //i will do it later as 0 admin, 1 trainer, 2 member
         public Person()
         {
 
         }
 
         // Your existing constructor
-        public Person(int id, string firstname, string lastname, string email, string phone, string username, string password, byte rule)
+        public Person(int id, string firstname, string lastname, string email, string phone, string username, string password)
         {
             this.PersonID = id;
             this.Firstname = firstname;
@@ -57,7 +55,6 @@ namespace Web_API.Models
             this.Phone = phone;
             this.Username = username;
             this.Password = password;
-            this.Role = rule;
         }
     }
 

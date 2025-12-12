@@ -58,6 +58,6 @@ namespace Web_API.Models
                 .HasForeignKey(a => a.ServiceID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
-        public DbSet<Web_API.Models.Person> Person { get; set; } = default!;
+        //public DbSet<Web_API.Models.Person> Person { get; set; } = default!;
     }
 }
