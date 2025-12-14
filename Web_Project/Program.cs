@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Web_Project.Data;
 using Web_Project.Models;
 using Web_Project.Services;
-
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -62,6 +64,43 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+static async Task SeedRolesAndAdminAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserDetails>>();
+
+    // Ensure roles exist
+    string[] roles = { "Admin", "Member" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    // Ensure required Admin exists
+    var adminEmail = "studentnumber@sakarya.edu.tr";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (adminUser == null)
+    {
+        adminUser = new UserDetails
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = true
+        };
+
+        var createResult = await userManager.CreateAsync(adminUser, "sau");
+        if (!createResult.Succeeded)
+            throw new Exception(string.Join(" | ", createResult.Errors.Select(e => e.Description)));
+    }
+
+    // Ensure Admin role assignment
+    if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -87,5 +126,5 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-
+await SeedRolesAndAdminAsync(app);
 app.Run();

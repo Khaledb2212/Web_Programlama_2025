@@ -236,6 +236,10 @@ namespace Web_API.Controllers
 
         [Authorize]
         [HttpPost("RegisterMe", Name = "RegisterMeAsTrainer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Trainer>> RegisterMe(CreateTrainerDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -268,6 +272,47 @@ namespace Web_API.Controllers
             return CreatedAtAction(nameof(GetTrainer), new { id = trainer.TrainerID }, trainer);
         }
 
+        [HttpPost("Available", Name = "Available")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Trainer>> Available(DateTime date, int serviceId)
+        {
+            if(serviceId < 0)
+            {
+                return BadRequest("The service Id is Invaild");
+            }
+
+            if(date < DateTime.Now.Date)
+            {
+                return BadRequest("The Date is invalid");
+            }
+
+            int day = (int)date.DayOfWeek;
+
+            var list = await _context.TrainerAvailabilities
+              .Where(a => a.DayOfWeek == day && a.ServiceTypeId == serviceId)
+              .Join(_context.Trainers.Include(t => t.person),
+                  a => a.TrainerId,
+                  t => t.TrainerID,
+                  (a, t) => new
+                  {
+                      t.TrainerID,
+                      TrainerName = (t.person != null ? (t.person.Firstname + " " + t.person.Lastname) : "Unknown"),
+                      a.DayOfWeek,
+                      StartTime = a.StartTime.ToString("HH:mm"),
+                      EndTime = a.EndTime.ToString("HH:mm"),
+                      ServiceId = a.ServiceTypeId
+                  })
+              .Distinct()
+              .OrderBy(x => x.TrainerName)
+              .ToListAsync();
+
+            if (list.Count == 0) return NotFound("No available trainers for that date/service.");
+
+            return Ok(list);
+
+        }
 
         private bool TrainerExists(int id)
         {

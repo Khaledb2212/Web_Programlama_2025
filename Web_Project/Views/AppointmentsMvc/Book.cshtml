@@ -1,0 +1,43 @@
+﻿@model BookAppointmentVm
+
+<h2>Book Appointment</h2>
+
+<form method="get">
+    <label>Date</label>
+    <input type="date" name="date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+
+    <label>Service</label>
+    <select name="serviceId">
+        <option value="0">-- select --</option>
+        @foreach (var s in Model.Services)
+        {
+                <option value="@s.Value" selected="@(s.Value == Model.ServiceId.ToString())">@s.Text</option>
+        }
+    </select>
+
+    <button type="submit">Search Trainers</button>
+</form>
+
+<hr />
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Date" />
+    <input type="hidden" asp-for="ServiceId" />
+
+    <label>Trainer</label>
+    <select asp-for="TrainerId" asp-items="Model.Trainers">
+        <option value="">-- select trainer --</option>
+    </select>
+
+    <label>Start</label>
+    <input type="time" asp-for="StartTime" />
+
+    <label>End</label>
+    <input type="time" asp-for="EndTime" />
+
+    <button type="submit">Book</button>
+
+    <div asp-validation-summary="All"></div>
+</form>

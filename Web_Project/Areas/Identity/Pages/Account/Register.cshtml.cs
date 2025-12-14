@@ -221,6 +221,8 @@ namespace Web_Project.Areas.Identity.Pages.Account
 
             _logger.LogInformation("User created a new account with password.");
 
+            await _userManager.AddToRoleAsync(user, "Member");
+
             // IMPORTANT: sign in FIRST so the auth cookie exists in the next request
             await _signInManager.SignInAsync(user, isPersistent: false);
 

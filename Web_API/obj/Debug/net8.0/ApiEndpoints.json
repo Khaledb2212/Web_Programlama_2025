@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "Web_API.Controllers.AppointmentsController",
+    "Method": "Book",
+    "RelativePath": "api/Appointments/Book",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Web_API.DTOs.BookAppointmentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web_API.Controllers.AppointmentsController",
     "Method": "DeleteAppointment",
     "RelativePath": "api/Appointments/DeleteAppointment",
     "HttpMethod": "DELETE",
@@ -108,6 +124,16 @@
         "StatusCode": 500
       }
     ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.AppointmentsController",
+    "Method": "MyAppointments",
+    "RelativePath": "api/Appointments/MyAppointments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Web_API.Controllers.AppointmentsController",
@@ -364,6 +390,26 @@
           "text/json"
         ],
         "StatusCode": 409
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.MembersController",
+    "Method": "RegisterMe",
+    "RelativePath": "api/Members/RegisterMe",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Web_API.Models.Member",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
       }
     ]
   },
@@ -856,6 +902,22 @@
   },
   {
     "ContainingType": "Web_API.Controllers.TrainerAvailabilitiesController",
+    "Method": "AddMySlot",
+    "RelativePath": "api/TrainerAvailabilities/AddMySlot",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Web_API.DTOs.AddAvailabilityDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainerAvailabilitiesController",
     "Method": "DeleteTrainerAvailability",
     "RelativePath": "api/TrainerAvailabilities/DeleteTrainerAvailability",
     "HttpMethod": "DELETE",
@@ -963,6 +1025,16 @@
         "StatusCode": 500
       }
     ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainerAvailabilitiesController",
+    "Method": "MySlots",
+    "RelativePath": "api/TrainerAvailabilities/MySlots",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Web_API.Controllers.TrainerAvailabilitiesController",
@@ -1105,6 +1177,47 @@
   },
   {
     "ContainingType": "Web_API.Controllers.TrainersController",
+    "Method": "Available",
+    "RelativePath": "api/Trainers/Available",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "serviceId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainersController",
     "Method": "DeleteTrainer",
     "RelativePath": "api/Trainers/DeleteTrainer",
     "HttpMethod": "DELETE",
@@ -1215,6 +1328,51 @@
   },
   {
     "ContainingType": "Web_API.Controllers.TrainersController",
+    "Method": "RegisterMe",
+    "RelativePath": "api/Trainers/RegisterMe",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Web_API.DTOs.CreateTrainerDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 401
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainersController",
     "Method": "PutTrainer",
     "RelativePath": "api/Trainers/UpdateTrainer",
     "HttpMethod": "PUT",
@@ -1262,6 +1420,22 @@
         "StatusCode": 500
       }
     ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainerSkillsController",
+    "Method": "AddMySkill",
+    "RelativePath": "api/TrainerSkills/AddMySkill",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Web_API.DTOs.AddMySkillDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Web_API.Controllers.TrainerSkillsController",
@@ -1372,6 +1546,16 @@
         "StatusCode": 500
       }
     ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainerSkillsController",
+    "Method": "MySkills",
+    "RelativePath": "api/TrainerSkills/MySkills",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Web_API.Controllers.TrainerSkillsController",
