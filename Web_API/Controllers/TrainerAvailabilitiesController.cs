@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Web_API.Models;
 using System.Security.Claims;
 using Web_API.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web_API.Controllers
 {
@@ -250,7 +251,7 @@ namespace Web_API.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Trainer")]
         [HttpPost("AddMySlot", Name = "AddMySlot")]
         public async Task<IActionResult> AddMySlot(AddAvailabilityDto dto)
         {

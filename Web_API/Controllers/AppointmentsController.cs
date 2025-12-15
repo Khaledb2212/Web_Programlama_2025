@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Web_API.Models;
 using System.Security.Claims;
 using Web_API.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web_API.Controllers
 
@@ -341,6 +342,10 @@ namespace Web_API.Controllers
             if (memberOverlap)
                 return Conflict("You already have an appointment at this time.");
 
+            var service = await _context.Services.FirstAsync(s => s.ServiceID == dto.ServiceId);
+            var hours = (dto.EndAt - dto.StartAt).TotalHours;
+            var fee = (decimal)service.FeesPerHour * (decimal)hours;
+
             // Create appointment
             var appt = new Appointment
             {
@@ -348,7 +353,9 @@ namespace Web_API.Controllers
                 TrainerID = dto.TrainerId,
                 ServiceID = dto.ServiceId,
                 StartTime = dto.StartAt,
-                EndTime = dto.EndAt
+                EndTime = dto.EndAt,
+                Fee = fee,
+                IsApproved = false
             };
 
             _context.Appointments.Add(appt);
@@ -357,6 +364,7 @@ namespace Web_API.Controllers
             return Ok(new { Message = "Booked", appt.AppointmentID });
         }
 
+        [Authorize(Roles = "Member")]
         [HttpGet("MyAppointments")]
         public async Task<IActionResult> MyAppointments()
         {
@@ -386,6 +394,43 @@ namespace Web_API.Controllers
 
             return Ok(list);
         }
+
+        [Authorize(Roles = "Admin, Trainer")]
+        [HttpPut("{id}/Approve")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Approve(int id)
+        {
+            if (id < 0)
+                return BadRequest("Id is wrong in the approve method");
+
+            var appt = await _context.Appointments.FindAsync(id);
+            if (appt == null)
+                return NotFound("This appointment could not be found");
+
+            if(!User.IsInRole("Admin") && User.IsInRole("Trainer"))
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrWhiteSpace(userId))
+                    return Unauthorized();
+
+                var person = await _context.People.FirstOrDefaultAsync(p => p.UserId == userId);
+                if (person == null) return BadRequest("No Person profile found.");
+
+                var trainer = await _context.Trainers.FirstOrDefaultAsync(t => t.PersonID == person.PersonID);
+                if (trainer == null) return Forbid();
+
+                if (appt.TrainerID != trainer.TrainerID)
+                    return Forbid("You can only approve your own appointments.");
+            }
+            appt.IsApproved = true;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Approved", appt.AppointmentID });
+        }
+        
 
         private bool AppointmentExists(int id)
         {

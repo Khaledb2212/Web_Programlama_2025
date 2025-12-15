@@ -240,7 +240,9 @@ namespace Web_API.Controllers
             }
         }
 
+        [Authorize(Roles = "Trainer")]
         [HttpPost("AddMySkill", Name = "AddMySkill")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> AddMySkill(AddMySkillDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

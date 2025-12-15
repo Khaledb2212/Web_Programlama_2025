@@ -314,6 +314,74 @@ namespace Web_API.Controllers
 
         }
 
+
+        [HttpPost("AvailableWithDTO", Name = "AvailableWithDTO")]
+        public async Task<IActionResult> AvailableWithDTO(AvailableTrainersRequestDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (dto.ServiceId <= 0)
+                return BadRequest("Invalid serviceId.");
+
+            if (dto.Date.Date < DateTime.Today)
+                return BadRequest("Date cannot be in the past.");
+
+            if (!TimeSpan.TryParse(dto.Start, out var startTs))
+                return BadRequest("Start must be like '09:00'.");
+
+            if (!TimeSpan.TryParse(dto.End, out var endTs))
+                return BadRequest("End must be like '10:00'.");
+
+            if (startTs >= endTs)
+                return BadRequest("Start must be < End.");
+
+            int day = (int)dto.Date.DayOfWeek;
+
+            // Availability is stored as DateTime anchored (e.g., 2000-01-01 + time)
+            var anchor = new DateTime(2000, 1, 1);
+            var reqStart = anchor.Add(startTs);
+            var reqEnd = anchor.Add(endTs);
+
+            // Real datetime for appointments
+            var reqStartAt = dto.Date.Date.Add(startTs);
+            var reqEndAt = dto.Date.Date.Add(endTs);
+
+            // Trainers who have a slot containing this requested time
+            var slotTrainerIds = _context.TrainerAvailabilities
+                .Where(a =>
+                    a.DayOfWeek == day &&
+                    a.ServiceTypeId == dto.ServiceId &&
+                    reqStart >= a.StartTime &&
+                    reqEnd <= a.EndTime
+                )
+                .Select(a => a.TrainerId)
+                .Distinct();
+
+            // Trainers busy due to existing appointments
+            var busyTrainerIds = _context.Appointments
+                .Where(a => reqStartAt < a.EndTime && reqEndAt > a.StartTime)
+                .Select(a => a.TrainerID)
+                .Distinct();
+
+            var available = await _context.Trainers
+                .Include(t => t.person)
+                .Where(t => slotTrainerIds.Contains(t.TrainerID))
+                .Where(t => !busyTrainerIds.Contains(t.TrainerID))
+                .Select(t => new
+                {
+                    t.TrainerID,
+                    TrainerName = t.person != null ? (t.person.Firstname + " " + t.person.Lastname) : "Unknown",
+                    t.ExpertiseAreas,
+                    t.Description
+                })
+                .OrderBy(x => x.TrainerName)
+                .ToListAsync();
+
+            if (available.Count == 0)
+                return NotFound("No available trainers for that date/time/service.");
+
+            return Ok(available);
+        }
         private bool TrainerExists(int id)
         {
             return _context.Trainers.Any(e => e.TrainerID == id);
