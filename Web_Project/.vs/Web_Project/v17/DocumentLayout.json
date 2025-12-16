@@ -63,7 +63,7 @@
               "RelativeDocumentMoniker": "..\\Web_API\\Controllers\\TrainerSkillsController.cs",
               "ToolTip": "C:\\Users\\kloda\\OneDrive\\Desktop\\Web_Project2\\Web_API\\Controllers\\TrainerSkillsController.cs",
               "RelativeToolTip": "..\\Web_API\\Controllers\\TrainerSkillsController.cs",
-              "ViewState": "AQIAANQAAAAAAAAAAAA6wPEAAAAAAAAA",
+              "ViewState": "AQIAAGoAAAAAAAAAAAA8wNMAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-14T19:03:26.07Z",
               "EditorCaption": ""
@@ -78,8 +78,7 @@
               "RelativeToolTip": "..\\Web_API\\Controllers\\TrainerAvailabilitiesController.cs",
               "ViewState": "AQIAAKEAAAAAAAAAAIBEwP0AAAAmAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T19:02:58.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T19:02:58.655Z"
             },
             {
               "$type": "Document",
@@ -91,8 +90,7 @@
               "RelativeToolTip": "..\\Web_API\\DTOs\\AvailableTrainersRequestDto.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T18:59:30.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T18:59:30.018Z"
             },
             {
               "$type": "Document",
@@ -104,8 +102,7 @@
               "RelativeToolTip": "..\\Web_API\\Controllers\\TrainersController.cs",
               "ViewState": "AQIAAPEAAAAAAAAAAAAowD0BAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T17:21:20.746Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T17:21:20.746Z"
             },
             {
               "$type": "Document",
@@ -117,8 +114,7 @@
               "RelativeToolTip": "Views\\AppointmentsMvc\\Book.cshtml",
               "ViewState": "AQIAABIAAAAAAAAAAAAAACsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-14T11:10:10.737Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T11:10:10.737Z"
             },
             {
               "$type": "Document",
@@ -130,8 +126,7 @@
               "RelativeToolTip": "..\\Web_API\\Controllers\\AppointmentsController.cs",
               "ViewState": "AQIAALoAAAAAAAAAAAAowG4BAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T11:08:23.415Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T11:08:23.415Z"
             },
             {
               "$type": "Document",

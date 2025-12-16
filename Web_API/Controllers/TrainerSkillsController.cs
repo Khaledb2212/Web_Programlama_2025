@@ -209,7 +209,7 @@ namespace Web_API.Controllers
             return NoContent();
         }
 
-        // DELETE: api/TrainerSkills/5
+        // DELETE:
         [HttpDelete("DeleteTrainerSkill", Name = "DeleteTrainerSkill")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
