@@ -26,6 +26,7 @@ namespace Web_API.Controllers
             _context = context;
         }
 
+        //Git API from this 
         //https://localhost:7085/api/TrainerSkills/GetTrainerSkills
         [HttpGet("GetTrainerSkills",Name = "GetTrainerSkills")]
         [ProducesResponseType(StatusCodes.Status200OK)]
