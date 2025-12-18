@@ -241,6 +241,7 @@ namespace Web_API.Controllers
             }
         }
 
+        //adding skillis
         [Authorize(Roles = "Trainer")]
         [HttpPost("AddMySkill", Name = "AddMySkill")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
