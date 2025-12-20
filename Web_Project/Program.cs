@@ -62,6 +62,8 @@ builder.Services.AddHttpClient("WebApi", client =>
 .AddHttpMessageHandler<CookieForwardingHandler>();
 builder.Services.AddRazorPages();
 
+builder.Services.AddHttpClient<Web_Project.Services.GeminiService>();
+
 var app = builder.Build();
 
 static async Task SeedRolesAndAdminAsync(WebApplication app)

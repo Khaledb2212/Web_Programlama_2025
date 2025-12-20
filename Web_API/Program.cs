@@ -3,6 +3,7 @@ using Web_API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
+using System.Text.Json.Serialization;
 using System.IO;
     
 
@@ -54,6 +55,12 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(sharedKeysPath))
     .SetApplicationName("WebProject.SharedAuth");
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // This stops the infinite loop / browser crash
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 var app = builder.Build();
 

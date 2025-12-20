@@ -272,7 +272,7 @@ namespace Web_API.Controllers
         }
 
         [HttpPost("Book")]
-        [Authorize]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Book(BookAppointmentDto dto)
         {
             // 1. Basic Validation
@@ -336,7 +336,7 @@ namespace Web_API.Controllers
 
                 // Optional: You can set a default Fee or fetch it from Services
                 Fee = 0,
-                IsApproved = true // Automatically approve for now
+                IsApproved = false // Automatically approve for now
             };
 
             _context.Appointments.Add(appointment);
@@ -344,6 +344,8 @@ namespace Web_API.Controllers
 
             return Ok(new { Message = "Booking Successful!", AppointmentId = appointment.AppointmentID });
         }
+        
+
         [Authorize(Roles = "Member")]
         [HttpGet("MyAppointments")]
         public async Task<IActionResult> MyAppointments()
@@ -375,8 +377,10 @@ namespace Web_API.Controllers
             return Ok(list);
         }
 
+
+        //https://localhost:7085/api/Appointments/Approve?id=
         [Authorize(Roles = "Admin, Trainer")]
-        [HttpPut("{id}/Approve")]
+        [HttpPut("Approve", Name = "Approve")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -412,8 +416,52 @@ namespace Web_API.Controllers
         }
 
 
-        // DELETE: api/Appointments/Cancel/5
-        [HttpDelete("Cancel/{id}")]
+        // https://localhost:7085/api/Appointments/ 
+        [Authorize(Roles = "Trainer")]
+        [HttpGet("MyTrainerAppointments")]
+        public async Task<IActionResult> MyTrainerAppointments(bool pendingOnly = false, bool upcomingOnly = false)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+            var person = await _context.People.FirstOrDefaultAsync(p => p.UserId == userId);
+            if (person == null) return BadRequest("No Person profile found.");
+
+            var trainer = await _context.Trainers.FirstOrDefaultAsync(t => t.PersonID == person.PersonID);
+            if (trainer == null) return BadRequest("You are not registered as a Trainer.");
+
+            var q = _context.Appointments
+                .Where(a => a.TrainerID == trainer.TrainerID)
+                .Include(a => a.Member).ThenInclude(m => m.person)
+                .Include(a => a.Service)
+                .AsQueryable();
+
+            if (pendingOnly)
+                q = q.Where(a => !a.IsApproved);
+
+            if (upcomingOnly)
+                q = q.Where(a => a.StartTime >= DateTime.Now);
+
+            var list = await q
+                .OrderBy(a => a.StartTime)
+                .Select(a => new
+                {
+                    a.AppointmentID,
+                    a.StartTime,
+                    a.EndTime,
+                    a.IsApproved,
+                    a.Fee,
+                    MemberName = a.Member.person.Firstname + " " + a.Member.person.Lastname,
+                    ServiceName = a.Service.ServiceName
+                })
+                .ToListAsync();
+
+            return Ok(list);
+        }
+
+
+        //https://localhost:7085/api/Appointments/CancelAppointment?id=
+        [HttpDelete("CancelAppointment", Name = "CancelAppointment")]
         [Authorize]
         public async Task<IActionResult> CancelAppointment(int id)
         {
@@ -449,6 +497,7 @@ namespace Web_API.Controllers
 
             return NoContent(); // 204 Success
         }
+
 
         private bool AppointmentExists(int id)
         {

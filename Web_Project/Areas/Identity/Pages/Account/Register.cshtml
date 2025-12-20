@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -84,4 +84,188 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+}
+ *@
+ @page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="min-h-[calc(100vh-4rem)]">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+        <!-- Header -->
+        <div class="mb-8">
+            <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-700">
+                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                Account
+            </span>
+            <h1 class="mt-4 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+                Create your account
+            </h1>
+            <p class="mt-2 max-w-2xl text-sm text-slate-600">
+                Register to book sessions, manage appointments, and access role-based features.
+            </p>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-2">
+            <!-- Local register -->
+            <div class="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                <div class="border-b border-slate-200 bg-slate-50 px-6 py-4">
+                    <p class="text-sm font-semibold text-slate-900">Register with email</p>
+                    <p class="mt-1 text-xs text-slate-600">Fill in your details to create a local account.</p>
+                </div>
+
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="px-6 py-6 space-y-4">
+                    <div asp-validation-summary="ModelOnly"
+                         class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+                         role="alert">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label asp-for="Input.Email" class="text-sm font-medium text-slate-700"></label>
+                        <input asp-for="Input.Email"
+                               class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                               autocomplete="username"
+                               aria-required="true"
+                               placeholder="name@example.com" />
+                        <span asp-validation-for="Input.Email" class="mt-1 block text-xs text-red-600"></span>
+                    </div>
+
+                    <!-- Passwords -->
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label asp-for="Input.Password" class="text-sm font-medium text-slate-700"></label>
+                            <input asp-for="Input.Password"
+                                   type="password"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                   autocomplete="new-password"
+                                   aria-required="true"
+                                   placeholder="••••••••" />
+                            <span asp-validation-for="Input.Password" class="mt-1 block text-xs text-red-600"></span>
+                        </div>
+
+                        <div>
+                            <label asp-for="Input.ConfirmPassword" class="text-sm font-medium text-slate-700"></label>
+                            <input asp-for="Input.ConfirmPassword"
+                                   type="password"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                   autocomplete="new-password"
+                                   aria-required="true"
+                                   placeholder="••••••••" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="mt-1 block text-xs text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Profile -->
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label asp-for="Input.Firstname" class="text-sm font-medium text-slate-700"></label>
+                            <input asp-for="Input.Firstname"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                   aria-required="true"
+                                   placeholder="First name" />
+                            <span asp-validation-for="Input.Firstname" class="mt-1 block text-xs text-red-600"></span>
+                        </div>
+
+                        <div>
+                            <label asp-for="Input.Lastname" class="text-sm font-medium text-slate-700"></label>
+                            <input asp-for="Input.Lastname"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                   aria-required="true"
+                                   placeholder="Last name" />
+                            <span asp-validation-for="Input.Lastname" class="mt-1 block text-xs text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label asp-for="Input.Phone" class="text-sm font-medium text-slate-700"></label>
+                        <input asp-for="Input.Phone"
+                               class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                               aria-required="true"
+                               placeholder="Phone number" />
+                        <span asp-validation-for="Input.Phone" class="mt-1 block text-xs text-red-600"></span>
+                    </div>
+
+                    <button id="registerSubmit" type="submit"
+                            class="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500">
+                        Register
+                    </button>
+
+                    <div class="pt-2 text-sm text-slate-600">
+                        <p>
+                            Already have an account?
+                            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl"
+                               class="font-semibold text-emerald-700 hover:text-emerald-600">
+                                Log in
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- External register -->
+            <div class="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                <div class="border-b border-slate-200 bg-slate-50 px-6 py-4">
+                    <p class="text-sm font-semibold text-slate-900">External providers</p>
+                    <p class="mt-1 text-xs text-slate-600">Optional: register using external services.</p>
+                </div>
+
+                <div class="px-6 py-6">
+                    @{
+                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                        {
+                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                                        <p class="font-semibold text-slate-900">No external providers configured</p>
+                                        <p class="mt-1 text-slate-600">
+                                            This project currently supports local registration only.
+                                        </p>
+                                        <p class="mt-3 text-xs text-slate-500">
+                                            (You can enable Google/Microsoft login later if needed.)
+                                        </p>
+                                    </div>
+                        }
+                        else
+                        {
+                                    <form id="external-account"
+                                          asp-page="./ExternalLogin"
+                                          asp-route-returnUrl="@Model.ReturnUrl"
+                                          method="post"
+                                          class="space-y-3">
+
+                                        <div asp-validation-summary="All"
+                                             class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                                        </div>
+
+                                        <p class="text-sm text-slate-600">Choose a provider:</p>
+
+                                        <div class="flex flex-wrap gap-2">
+                                    @foreach (var provider in Model.ExternalLogins!)
+                                    {
+                                                    <button type="submit"
+                                                            class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50"
+                                                            name="provider"
+                                                            value="@provider.Name"
+                                                            title="Register using your @provider.DisplayName account">
+                                            @provider.DisplayName
+                                                    </button>
+                                    }
+                                        </div>
+                                    </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-xs text-slate-500">
+            Tip: after registration, you can log in and access role-based pages depending on your assigned role (Member / Trainer / Admin).
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
 }

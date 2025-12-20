@@ -64,8 +64,13 @@ namespace Web_API.Controllers
                 }
 
                 var trainer = await _context.Trainers
-                                            .Include(t => t.person) // Include personal details
-                                            .FirstOrDefaultAsync(t => t.TrainerID == id);
+
+                        .Include(t => t.person)
+                        .Include(t => t.Skills)
+                            // 3. IMPORTANT: Load the Service details (Name) inside the skill
+                            .ThenInclude(ts => ts.service)
+
+                        .FirstOrDefaultAsync(t => t.TrainerID == id);
 
                 if (trainer == null)
                 {
@@ -396,8 +401,55 @@ namespace Web_API.Controllers
 
             return Ok(available);
         }
-       
-        
+
+        [Authorize(Roles = "Trainer")]
+        [HttpGet("MyProfile", Name = "MyProfile")]
+        public async Task<IActionResult> MyProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+            // Find trainer by the logged-in Identity UserId
+            var trainer = await _context.Trainers
+                .Include(t => t.person)
+                .FirstOrDefaultAsync(t => t.person != null && t.person.UserId == userId);
+
+            if (trainer == null)
+                return BadRequest("You are not registered as a Trainer.");
+
+            return Ok(new
+            {
+                trainer.TrainerID,
+                trainer.ExpertiseAreas,
+                trainer.Description
+            });
+        }
+
+        [Authorize(Roles = "Trainer")]
+        [HttpPut("UpdateMyProfile", Name = "UpdateMyProfile")]
+        public async Task<IActionResult> UpdateMyProfile(CreateTrainerDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+            var trainer = await _context.Trainers
+                .Include(t => t.person)
+                .FirstOrDefaultAsync(t => t.person != null && t.person.UserId == userId);
+
+            if (trainer == null)
+                return BadRequest("You are not registered as a Trainer.");
+
+            // Only these two fields
+            trainer.ExpertiseAreas = dto.ExpertiseAreas;
+            trainer.Description = dto.Description;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // 204
+        }
+
         private bool TrainerExists(int id)
         {
             return _context.Trainers.Any(e => e.TrainerID == id);

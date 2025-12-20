@@ -58,8 +58,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/CreateService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlU2VydmljZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/CreateTrainer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlVHJhaW5lci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/EditService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdFNlcnZpY2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/EditTrainer.cshtml]
@@ -68,6 +76,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/ServiceDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2VydmljZURldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/Services.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2VydmljZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Admin/TrainerDetails.cshtml]
@@ -84,6 +100,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/AppointmentsMvc/MyAppointments.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzTXZjXE15QXBwb2ludG1lbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Diet/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlldFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Home/Index.cshtml]
@@ -108,6 +128,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/Trainer/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW5lclxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kloda/OneDrive/Desktop/Web_Project2/Web_Project/Views/_ViewImports.cshtml]

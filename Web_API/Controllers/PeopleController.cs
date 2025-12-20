@@ -87,85 +87,113 @@
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             [ProducesResponseType(StatusCodes.Status404NotFound)]
             [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-            public async Task<IActionResult> PutPerson(int id, Person person)
+              public async Task<IActionResult> PutPerson(int id, Person person)
+        {
+            if(id < 0 )
             {
-                if(id < 0 )
-                {
-                    return BadRequest("This Id Is Invalid");
-                }
-
-
-                if (id != person.PersonID)
-                {
-                    return BadRequest("Person ID mismatch"); // Status 400
-                }
-
-                _context.Entry(person).State = EntityState.Modified;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PersonExists(id))
-                    {
-                        return NotFound($"Person with Id = {id} not found"); // Status 404
-                    }
-                    else
-                    {
-                        // If it's a concurrency error but the person exists, rethrow strictly
-                        return StatusCode(StatusCodes.Status500InternalServerError, "Concurrency error occurred");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError,
-                        "Error updating data");
-                }
-
-                return NoContent(); // Status 204 (Success, but nothing to return)
+                return BadRequest("This Id Is Invalid");
             }
+        
+        
+            if (id != person.PersonID)
+            {
+                return BadRequest("Person ID mismatch"); // Status 400
+            }
+        
+            _context.Entry(person).State = EntityState.Modified;
+        
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PersonExists(id))
+                {
+                    return NotFound($"Person with Id = {id} not found"); // Status 404
+                }
+                else
+                {
+                    // If it's a concurrency error but the person exists, rethrow strictly
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Concurrency error occurred");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error updating data");
+            }
+        
+            return NoContent(); // Status 204 (Success, but nothing to return)
+        }
 
 
-
-            // Called from MVC right after Identity user is created.
-            //https://localhost:7085/api/People/PostPerson
-            [HttpPost("PostPerson", Name = "PostPerson")]
+        // Called from MVC right after Identity user is created.
+        //https://localhost:7085/api/People/PostPerson
+        [HttpPost("PostPerson", Name = "PostPerson")]
             [AllowAnonymous]
             [ProducesResponseType(StatusCodes.Status201Created)]
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-            public async Task<ActionResult<Person>> PostPerson(CreatePersonDto dto)
+        //public async Task<ActionResult<Person>> PostPerson(CreatePersonDto dto)
+        //{
+        //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //if (string.IsNullOrWhiteSpace(userId))
+        //    return Unauthorized("No authenticated user (cookie not received/decrypted).");
+
+        //if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        //    bool exists = await _context.People.AnyAsync(p => p.UserId == userId);
+        //    if (exists) return Conflict("Person already exists for this user.");
+
+        //    var person = new Person
+        //    {
+        //        UserId = userId,
+        //        Firstname = dto.Firstname,
+        //        Lastname = dto.Lastname,
+        //        Phone = dto.Phone
+        //    };
+
+        //    _context.People.Add(person);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction(nameof(GetPerson), new { id = person.PersonID }, person);
+
+        //}
+
+        public async Task<ActionResult<Person>> PostPerson(Person person)
+        {
+            // 1. Check if the "UserId" was sent from the MVC Admin Controller.
+            //    If person.UserId is NULL or Empty, it means a normal user is registering,
+            //    so we grab the ID from their Cookie.
+            if (string.IsNullOrEmpty(person.UserId))
             {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrWhiteSpace(userId))
-                return Unauthorized("No authenticated user (cookie not received/decrypted).");
-
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-                bool exists = await _context.People.AnyAsync(p => p.UserId == userId);
-                if (exists) return Conflict("Person already exists for this user.");
-
-                var person = new Person
-                {
-                    UserId = userId,
-                    Firstname = dto.Firstname,
-                    Lastname = dto.Lastname,
-                    Phone = dto.Phone
-                };
-
-                _context.People.Add(person);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetPerson), new { id = person.PersonID }, person);
-
+                person.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             }
 
+            // 2. Safety Check: If we still don't have an ID, return error.
+            if (string.IsNullOrEmpty(person.UserId))
+            {
+                return BadRequest("UserId is required.");
+            }
+
+            // 3. Check if a Person record already exists for this UserID
+            //    (This prevents the "Conflict" error you were seeing)
+            if (_context.People.Any(p => p.UserId == person.UserId))
+            {
+                return Conflict("Person already exists for this user.");
+            }
+
+            // 4. Save to Database
+            _context.People.Add(person);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPerson", new { id = person.PersonID }, person);
+        }
 
 
-            // Requires cookie auth (shared cookie) and returns the current user's Person.
-            [HttpGet("GetAuthenticatedPerson")]
+        // Requires cookie auth (shared cookie) and returns the current user's Person.
+        [HttpGet("GetAuthenticatedPerson")]
             [Authorize]
             public async Task<ActionResult<Person>> GetAuthenticatedPerson()
             {

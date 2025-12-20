@@ -2,7 +2,7 @@
   {
     "ContainingType": "Web_API.Controllers.AppointmentsController",
     "Method": "Approve",
-    "RelativePath": "api/Appointments/{id}/Approve",
+    "RelativePath": "api/Appointments/Approve",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -10,7 +10,7 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -63,7 +63,7 @@
   {
     "ContainingType": "Web_API.Controllers.AppointmentsController",
     "Method": "CancelAppointment",
-    "RelativePath": "api/Appointments/Cancel/{id}",
+    "RelativePath": "api/Appointments/CancelAppointment",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -71,7 +71,7 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -194,6 +194,27 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web_API.Controllers.AppointmentsController",
+    "Method": "MyTrainerAppointments",
+    "RelativePath": "api/Appointments/MyTrainerAppointments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pendingOnly",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "upcomingOnly",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -680,8 +701,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dto",
-        "Type": "Web_API.DTOs.CreatePersonDto",
+        "Name": "person",
+        "Type": "Web_API.Models.Person",
         "IsRequired": true
       }
     ],
@@ -1405,6 +1426,16 @@
   },
   {
     "ContainingType": "Web_API.Controllers.TrainersController",
+    "Method": "MyProfile",
+    "RelativePath": "api/Trainers/MyProfile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainersController",
     "Method": "RegisterMe",
     "RelativePath": "api/Trainers/RegisterMe",
     "HttpMethod": "POST",
@@ -1447,6 +1478,22 @@
         "StatusCode": 500
       }
     ]
+  },
+  {
+    "ContainingType": "Web_API.Controllers.TrainersController",
+    "Method": "UpdateMyProfile",
+    "RelativePath": "api/Trainers/UpdateMyProfile",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Web_API.DTOs.CreateTrainerDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Web_API.Controllers.TrainersController",

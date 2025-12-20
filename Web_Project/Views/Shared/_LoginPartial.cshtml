@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@* @using Microsoft.AspNetCore.Identity
 @using Web_Project.Models
 @inject SignInManager<UserDetails> SignInManager
 @inject UserManager<UserDetails> UserManager
@@ -24,4 +24,43 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
-</ul>
+</ul> *@
+
+@using Microsoft.AspNetCore.Identity
+@using Web_Project.Models
+@inject SignInManager<UserDetails> SignInManager
+@inject UserManager<UserDetails> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+        <div class="flex items-center gap-3">
+            <a class="text-sm font-medium text-slate-700 hover:text-slate-900"
+               asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                Hello @User.Identity?.Name!
+            </a>
+
+            <form class="inline-flex"
+                  asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit"
+                        class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50">
+                    Logout
+                </button>
+            </form>
+        </div>
+}
+else
+{
+        <div class="flex items-center gap-2">
+            <a class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50"
+               asp-area="Identity" asp-page="/Account/Register">
+                Register
+            </a>
+
+            <a class="rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
+               asp-area="Identity" asp-page="/Account/Login">
+                Login
+            </a>
+        </div>
+}
+

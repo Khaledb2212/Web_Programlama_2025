@@ -329,6 +329,7 @@ namespace Web_API.Controllers
         }
 
         // GET: api/TrainerAvailabilities/MySlots
+        [Authorize(Roles = "Trainer")]
         [HttpGet("MySlots", Name = "MySlots")]
         public async Task<IActionResult> MySlots()
         {
